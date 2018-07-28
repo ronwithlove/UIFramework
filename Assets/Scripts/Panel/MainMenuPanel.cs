@@ -11,6 +11,21 @@ using System.Collections;
 /// </summary>
 public class MainMenuPanel : BasePanel {
 
+    private CanvasGroup canvasGroup;
+
+    void Start() {
+        canvasGroup = GetComponent<CanvasGroup>();
+    }
+    public override void OnPause() {
+        canvasGroup.blocksRaycasts = false;
+    }
+
+    //继续界面
+    public override void OnResume() {
+        canvasGroup.blocksRaycasts = true;
+
+    }
+
     //把其他页面显示出来
     public void OnPushPanel(string panelTypeString)
     {
