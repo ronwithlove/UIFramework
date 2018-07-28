@@ -34,25 +34,46 @@ public class UIManager {
     }
     private Dictionary<UIPanelType, string> panelPathDict;//储存所有面板Prefab的路径
     private Dictionary<UIPanelType, BasePanel> panelDict;//储存所有实例化面板上的BasePanel组件 
+    private Stack<BasePanel> panelStack;
 
-    private UIManager()//pratvate构造方法，就无法在外部实例化，因为这里我们用单例
-    {
+    //pratvate构造方法，就无法在外部实例化，因为这里我们用单例
+    private UIManager() {
         ParseUIPanelTypeJson();//当构造函数被调用，就会使用着方法
     }
 
-    /// <summary>
+    //页面显示在界面上 ，入栈
+    public void PushPanel(UIPanelType panelType)
+    {
+        if (panelStack == null) {//如果栈未创建，创建一个
+            panelStack = new Stack<BasePanel>();
+        }
+        //如果栈内已有页面，最上面那个暂停掉
+        if (panelStack.Count > 0)
+        {
+            BasePanel topPanel = panelStack.Peek();
+            topPanel.OnPause();
+        }
+
+        BasePanel panel = GetPanel(panelType);
+        panel.OnEnter();
+        panelStack.Push(panel);
+    }
+
+    //页面从界面上移除，出栈
+    public void PopPanel() {
+    }
+
+
+
     /// 根据面板类型 得到实例化的面板
     /// 如果panelDict字典内有就返回，如果没就创建，加入字典
-    /// </summary>
-    /// <returns></returns>
-    public BasePanel GetPanel(UIPanelType panelType) {
+    private BasePanel GetPanel(UIPanelType panelType) {
         if (panelDict == null) {//如果这个字典为空，还没被创建
             panelDict = new Dictionary<UIPanelType, BasePanel>();//就新建一个新的字典
         }
 
         //BasePanel panel;
         //panelDict.TryGetValue(panelType, out panel);//TODO
-
         BasePanel panel = panelDict.TryGet(panelType);
 
         if (panel == null) {//如果没找到，就取得路径实例化他
@@ -60,14 +81,13 @@ public class UIManager {
             //panelPathDict.TryGetValue(panelType, out path);
             string path = panelPathDict.TryGet(panelType);
             GameObject instPanel = GameObject.Instantiate(Resources.Load(path)) as GameObject;
-            instPanel.transform.SetParent(CanvasTransform);//TODO
+            instPanel.transform.SetParent(CanvasTransform, false);//这里要加上false，才会在Canvas正常位置显示
             panelDict.Add(panelType, instPanel.GetComponent<BasePanel>());
             return instPanel.GetComponent<BasePanel>();
         }
         else {
             return panel;
         }
-
     }
 
 
