@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
+
 
 public class ItemMessagePanel : BasePanel {
 
@@ -13,13 +15,20 @@ public class ItemMessagePanel : BasePanel {
     public override void OnEnter() {
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1;
+
+        //动画
+        transform.localScale = Vector3.zero;
+        transform.DOScale(1, .5f);
     }
 
 
     //处理页面的关闭
     public override void OnExit() {
         canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 0;
+        //  canvasGroup.alpha = 0;
+        //动画
+        transform.DOScale(0, .5f).OnComplete(()=>canvasGroup.alpha=0);
+
     }
 
     public void OnClosePanel() {

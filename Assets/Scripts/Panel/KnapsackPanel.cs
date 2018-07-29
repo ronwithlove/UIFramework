@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class KnapsackPanel : BasePanel {
     private CanvasGroup canvasGroup;
@@ -12,12 +13,21 @@ public class KnapsackPanel : BasePanel {
     public override void OnEnter() {
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1;
+
+        //动画
+        Vector3 temp = transform.localPosition;
+        temp.x = 600;
+        transform.localPosition = temp;
+        transform.DOLocalMoveX(0, 0.5f);
     }
     
     //处理页面的关闭
     public override void OnExit() {
         canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 0;
+        //canvasGroup.alpha = 0;
+
+        //动画
+        transform.DOLocalMoveX(600, 0.5f).OnComplete(()=>canvasGroup.alpha=0);
     }
 
     public void OnClosePanel() {
