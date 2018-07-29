@@ -3,13 +3,26 @@ using System.Collections;
 
 public class SkillPanel : BasePanel {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private CanvasGroup canvasGroup;
+
+    void Awake() {
+        canvasGroup = GetComponent<CanvasGroup>();
+    }
+
+    //显示界面
+    public override void OnEnter() {
+        canvasGroup.blocksRaycasts = true;
+        canvasGroup.alpha = 1;
+    }
+
+
+    //处理页面的关闭
+    public override void OnExit() {
+        canvasGroup.blocksRaycasts = false;
+        canvasGroup.alpha = 0;
+    }
+
+    public void OnClosePanel() {
+        UIManager.Instance.PopPanel();
+    }
 }

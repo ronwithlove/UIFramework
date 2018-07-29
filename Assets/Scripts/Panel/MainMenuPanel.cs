@@ -13,9 +13,10 @@ public class MainMenuPanel : BasePanel {
 
     private CanvasGroup canvasGroup;
 
-    void Start() {
+    void Awake() {
         canvasGroup = GetComponent<CanvasGroup>();
     }
+
     public override void OnPause() {
         canvasGroup.blocksRaycasts = false;
     }
@@ -26,9 +27,8 @@ public class MainMenuPanel : BasePanel {
 
     }
 
-    //把其他页面显示出来
-    public void OnPushPanel(string panelTypeString)
-    {
+    //主界面其他界面的快捷键调用，把其他页面显示出来
+    public void OnPushPanel(string panelTypeString){
         UIPanelType panelType =(UIPanelType) System.Enum.Parse(typeof (UIPanelType), panelTypeString);
         UIManager.Instance.PushPanel(panelType);
     }
